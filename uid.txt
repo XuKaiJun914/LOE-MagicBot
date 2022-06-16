@@ -1,0 +1,11 @@
+add_principal identifier.discord:280641890381201408 #𝑱𝑰𝒁𝑰
+add_principal identifier.discord:832976238943141928 #貓key
+add_principal identifier.discord:616730421027405830 #Abyss
+add_principal identifier.discord:829993654113402940 #Dogllas
+add_principal identifier.discord:492669232996417568 #SmallDevil
+add_principal identifier.discord:776842362546290749 #Modeling
+add_principal identifier.discord:395579281914331137 #LIINight
+add_principal identifier.discord:427080645114855424 #yuye
+add_principal identifier.discord:746711319243128872 #JacobPac
+add_principal identifier.discord:505375228122103810 #阿信
+add_principal identifier.discord:341877762241462273 #哈拿

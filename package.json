@@ -1,0 +1,17 @@
+{
+  "name": "GOPDOJ-MagicBot",
+  "main": "main.js",
+  "author": "SmallDevil,Johnnnny",
+  "version": "1.0.0",
+  "repository": "https://github.com/Force0914/GOPDOJ-MagicBot.git",
+  "description": "A Magic Bot for GOPDOJ.",
+  "scripts": {
+    "start": "node main.js"
+  },
+  "dependencies": {
+    "discord-modals": "^1.3.2",
+    "discord.js": "^13.1.0",
+    "ms": "^3.0.0-canary.1",
+    "node-fetch": "^3.2.3"
+  }
+}
