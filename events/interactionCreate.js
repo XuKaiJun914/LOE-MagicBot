@@ -142,55 +142,6 @@ module.exports = async (client,interaction) => {
 				break;
 		}
 	}
-	if (/.*?-\d*/.test(interaction.customId) && interaction.customId.split("-")[0] == "拒絕原因") {
-		bruh = interaction.customId.split("-")
-		msg = interaction.message
-		if (['年齡不符','人設不符','謊報','不適用'].includes(interaction.values[0])) {
-			reason = interaction.values[0]
-			const embed = msg.embeds[0]
-			department = embed.description.split("\n")[1]
-			embed.color = 0xDB4939
-			embed.description += `\n處理人: <@${interaction.user.id}> | ❌ 原因:${reason}`
-			embed.footer.text = embed.footer.text.replace("狀態待處理", "狀態已拒絕")
-			if (forms['移民申請'].channelId != interaction.channel.id) {
-				msg.edit({ embeds: [embed], components: [] });
-			}else{
-				msg.delete()
-				client.channels.cache.get(forms['移民申請'].alreadychannel).send({ embeds: [embed], components: [] });
-			}
-			try {
-		                user = client.users.cache.get(bruh[1])
-				await user.send({
-					embeds: [new MessageEmbed()
-						.setColor(0xE74D3C)
-						.setTitle("拒絕申請通知")
-						.setDescription(`${department} 已拒絕你的申請\n若有任何異議請創建工單詢問, 請勿私訊管理員`)
-						.setFooter({ text: 'Land of Edge | 邊陲之地 | developed by Johnnnny, SmallDevil', iconURL: 'https://cdn.discordapp.com/attachments/981967018502803516/982027612631220296/LOE.png' })
-					]
-				})
-			} catch (error) {
-				console.log(error)
-			}
-		}
-		else if (interaction.values[0] == "取消"){
-			let row = new MessageActionRow()
-			.addComponents(
-				new MessageButton()
-					.setCustomId(`接受-${interaction.user.id}`)
-					.setLabel('接受')
-					.setStyle('SUCCESS')
-					.setEmoji('✅')
-			)
-			.addComponents(
-				new MessageButton()
-					.setCustomId(`拒絕-${interaction.user.id}`)
-					.setLabel('拒絕')
-					.setStyle('DANGER')
-					.setEmoji('❌')
-			)
-			interaction.update({ components: [row] });
-		}
-	}
 
     if (!interaction.isButton()) return;
 	if (forms[interaction.customId] != null && interaction.customId != "移民申請" && interaction.customId != "執法人員申請"){
@@ -301,40 +252,24 @@ module.exports = async (client,interaction) => {
 			}
 		}
 		if (bla[0] == "拒絕") {
-			let row = new MessageActionRow()
-				.addComponents(
-					new MessageSelectMenu()
-						.setCustomId(`拒絕原因-${bla[1]}`)
-						.setPlaceholder('選擇拒絕原因')
-						.addOptions([
-							{
-								label: '年齡不符',
-								description: '年齡少於18歲/不符合規定',
-								value: '年齡不符',
-							},
-							{
-								label: '人設不符',
-								description: '人設背景不符規範',
-								value: '人設不符',
-							},
-							{
-								label: '謊報',
-								description: '謊報',
-								value: '謊報',
-							},
-							{
-								label: '不適用',
-								description: '不適用 | N/A',
-								value: '不適用',
-							},
-							{
-								label: '取消',
-								description: '回到上一頁',
-								value: '取消',
-							},
-						]),
-				);
-			interaction.update({ components: [row] });
+			data = forms["面試拒絕"]
+			TextInput = []
+			data.questions.forEach(e => {
+				TextInput.push(new TextInputComponent()
+				.setCustomId(e)
+				.setLabel(e)
+				.setStyle('SHORT')
+				.setRequired(true)
+				)
+			});
+			modal = new Modal()
+			.setCustomId(`拒絕原因-${bla[1]}`)
+			.setTitle(`輸入拒絕原因`)
+			.addComponents(TextInput)
+			showModal(modal, {
+				client: client, 
+				interaction: interaction 
+			})
 		}
 	}
 };

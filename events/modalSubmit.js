@@ -97,7 +97,7 @@ module.exports = async (clients, modal) => {
         const thankembed = new MessageEmbed()
             .setColor(0xe7ddb0)
             .setTitle(`感謝你申請了 Land of Edge | 邊陲之地\n${data.name}`)
-            .setFooter({ text: 'Land of Edge | 邊陲之地 | developed by Johnnnny, SmallDevil' });
+            .setFooter({ text: 'Land of Edge | 邊陲之地 | developed by Johnnnny, SmallDevil', iconURL: 'https://cdn.discordapp.com/attachments/981967018502803516/982027612631220296/LOE.png' });
         const row = new MessageActionRow()
             .addComponents(
                 new MessageButton()
@@ -167,7 +167,7 @@ module.exports = async (clients, modal) => {
         const thankembed = new MessageEmbed()
             .setColor(0xe7ddb0)
             .setTitle(`感謝你申請了 Land of Edge | 邊陲之地\n${data.name}`)
-            .setFooter({ text: 'Land of Edge | 邊陲之地 | developed by Johnnnny, SmallDevil' });
+            .setFooter({ text: 'Land of Edge | 邊陲之地 | developed by Johnnnny, SmallDevil', iconURL: 'https://cdn.discordapp.com/attachments/981967018502803516/982027612631220296/LOE.png' });
         const row = new MessageActionRow()
             .addComponents(
                 new MessageButton()
@@ -228,5 +228,42 @@ module.exports = async (clients, modal) => {
         await modal.deferReply({ ephemeral: true })
         modal.followUp({ content: `已創建<#${channel.id}>`, ephemeral: true })
         fs.writeFileSync("database.json", JSON.stringify(database));
+    }
+
+    if (/.*?-\d*/.test(modal.customId) && modal.customId.includes('拒絕原因')) {
+		bruh = modal.customId.split("-")
+		msg = modal.message
+        reason = modal.fields[0].value
+        const embed = msg.embeds[0]
+        department = embed.description.split("\n")[1]
+        embed.color = 0xDB4939
+        embed.description += `\n處理人: <@${modal.user.id}> | ❌ 原因:${reason}`
+        embed.footer.text = embed.footer.text.replace("狀態待處理", "狀態已拒絕")
+        try {
+            user = client.users.cache.get(bruh[1])
+            await user.send({
+                embeds: [new MessageEmbed()
+                    .setColor(0xE74D3C)
+                    .setTitle("拒絕申請通知")
+                    .setDescription(`${department} 已拒絕你的申請\n理由是:\`${reason}\`\n若有任何異議請創建工單詢問, 請勿私訊管理員`)
+                    .setFooter({ text: 'Land of Edge | 邊陲之地 | developed by Johnnnny, SmallDevil', iconURL: 'https://cdn.discordapp.com/attachments/981967018502803516/982027612631220296/LOE.png'})
+                ]
+            })
+        } catch (error) {
+            console.log(error)
+        }
+        modal.reply(`已嘗試通知 <@${bruh[1]}>，拒絕理由為: ${reason}`)
+        if (forms['移民申請'].channelId != modal.channel.id) {
+            msg.edit({ embeds: [embed], components: [] });
+            setTimeout(() => {
+                modal.deleteReply()
+            }, 5000);
+        }else{
+            client.channels.cache.get(forms['移民申請'].alreadychannel).send({ embeds: [embed], components: [] });
+            setTimeout(() => {
+                modal.deleteReply()
+                msg.delete()
+            }, 5000);
+        }
     }
 };
