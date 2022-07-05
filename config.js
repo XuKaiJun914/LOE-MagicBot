@@ -10,7 +10,7 @@ module.exports = {
     opt: {
         DJ: {
             enabled: true,
-            roleName: ['⚙️ 管理組 | MT','👨‍💻 開發組 | DEV'],
+            roleName: ['⚙️ 管理組 | MT','👨‍💻 DC開發組 | DEV'],
             commands: ['ping','close']
         }
     }
