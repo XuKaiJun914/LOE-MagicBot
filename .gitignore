@@ -1,2 +1,8 @@
 
 node_modules/
+
+commands/.DS_Store
+
+commands/core/.DS_Store
+
+.DS_Store

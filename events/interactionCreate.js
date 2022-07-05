@@ -16,7 +16,7 @@ module.exports = async (client,interaction) => {
 			embed = new MessageEmbed()
 				.setColor(0xe7ddb0)
 				.setTitle('工單已關閉') 
-				.setDescription("此工單頻道將在五秒鐘後刪除。")
+				.setDescription("此工單頻道將在五秒鐘後封存。")
 				.setFooter({ text: 'Land of Edge | 邊陲之地 | developed by Johnnnny, SmallDevil', iconURL: 'https://cdn.discordapp.com/attachments/981967018502803516/982027612631220296/LOE.png' });
 			interaction.update({embeds:[embed],components: []})
 			setTimeout(async () => {
@@ -38,12 +38,14 @@ module.exports = async (client,interaction) => {
 					if (typeof database["工單"][e] != "object") continue;
 					if (database["工單"][e].catChannel == interaction.message.channel.parentId) {
 						if (database["工單"][e].channel[interaction.message.channel.id] != undefined) {
+							let channel = client.channels.cache.get(interaction.message.channel.id)
+							channel.setParent(forms["工單-問題"].archivecategory)
+							channel.setName(channel.name.replace("工單-","工單-已封存-"))
 							delete database["工單"][e].channel[interaction.message.channel.id]
 						}
 					}
 				}
 				fs.writeFileSync("database.json", JSON.stringify(database));
-				await client.channels.cache.get(interaction.message.channel.id).delete()
 			}, 5000)
 		}else{
 			interaction.message.delete()
