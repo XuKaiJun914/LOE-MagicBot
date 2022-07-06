@@ -11,7 +11,7 @@ module.exports = async (client) => {
         for (e in database["贊助身份組"]) {
             if (now > database["贊助身份組"][e]) {
                 let member = client.guilds.cache.get("984520817528426516").members.cache.get(e);
-                member.roles.remove("984533383738699777");
+                member.roles.remove("984533395352723456");
                 delete database["贊助身份組"][e]; 
         }
     }
