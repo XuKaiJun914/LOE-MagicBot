@@ -10,7 +10,7 @@ fs.readFile('forms.json', function (err, data) {
 module.exports = async (client,interaction) => {
 	let database = JSON.parse(fs.readFileSync('database.json', function (){}))
 	let bruh = []
-	if(interaction.customId.startsWith("close")){
+	if(interaction.customId.startsWith("saveclose")){
 		let deleteTicket = interaction.customId.split("-")[1] == "是" ? true : false
 		if (deleteTicket) {
 			embed = new MessageEmbed()
@@ -46,6 +46,46 @@ module.exports = async (client,interaction) => {
 					}
 				}
 				fs.writeFileSync("database.json", JSON.stringify(database));
+			}, 5000)
+		}else{
+			interaction.message.delete()
+		}
+		return
+	}
+	if(interaction.customId.startsWith("close")){
+		let deleteTicket = interaction.customId.split("-")[1] == "是" ? true : false
+		if (deleteTicket) {
+			embed = new MessageEmbed()
+				.setColor(0xe7ddb0)
+				.setTitle('工單已關閉') 
+				.setDescription("此工單頻道將在五秒鐘後關閉。")
+				.setFooter({ text: 'Land of Edge | 邊陲之地 | developed by Johnnnny, SmallDevil', iconURL: 'https://cdn.discordapp.com/attachments/981967018502803516/982027612631220296/LOE.png' });
+			interaction.update({embeds:[embed],components: []})
+			setTimeout(async () => {
+				if (interaction.customId.split("-")[3]!="") {
+					try {
+						await client.users.cache.get(interaction.customId.split("-")[2]).send({
+							embeds: [new MessageEmbed()
+								.setColor(0xE74D3C)
+								.setTitle("工單關閉通知")
+								.setDescription(`您的工單已被關閉，理由是：\`${interaction.customId.split("-").slice(3).join("-")}\``)
+								.setFooter({ text: 'Land of Edge | 邊陲之地 | developed by Johnnnny, SmallDevil', iconURL: 'https://cdn.discordapp.com/attachments/981967018502803516/982027612631220296/LOE.png' })
+							]
+						})
+					} catch (e) {
+						console.log(e);
+					}
+				}
+				for(e in database["工單"]){
+					if (typeof database["工單"][e] != "object") continue;
+					if (database["工單"][e].catChannel == interaction.message.channel.parentId) {
+						if (database["工單"][e].channel[interaction.message.channel.id] != undefined) {
+							delete database["工單"][e].channel[interaction.message.channel.id]
+						}
+					}
+				}
+				fs.writeFileSync("database.json", JSON.stringify(database));
+				await client.channels.cache.get(interaction.message.channel.id).delete() 
 			}, 5000)
 		}else{
 			interaction.message.delete()
